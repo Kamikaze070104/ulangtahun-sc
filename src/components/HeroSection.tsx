@@ -42,7 +42,7 @@ const HeroSection = ({ isLoading = false }: HeroSectionProps) => {
                 >
                     {/* Animated title */}
                     <motion.h1
-                        className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold gradient-text leading-tight px-2 max-w-full break-words flex flex-wrap justify-center gap-x-2"
+                        className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold gradient-text leading-snug sm:leading-tight px-2 max-w-full flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 sm:gap-y-2"
                         variants={fadeInDown}
                     >
                         {title.split(' ').map((word, wordIndex) => (

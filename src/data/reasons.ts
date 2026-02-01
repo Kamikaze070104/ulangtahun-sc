@@ -49,10 +49,10 @@ export const reasons: Reason[] = [
     },
     {
         id: 7,
-        title: "Rajin menabung",
+        title: "Rajin Menabung",
         description: "wkwkwkwk gatau sih tapi mungkin aja :v.",
         emoji: "💰",
-        color: "primary"
+        color: "secondary"
     },
     {
         id: 8,

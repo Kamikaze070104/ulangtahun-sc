@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Balloon {
@@ -19,11 +19,19 @@ const colors = [
     'bg-orange-400'
 ];
 
+const GAME_DURATION = 30; // seconds
+
 const BalloonPop = () => {
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(30);
+    const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
     const [balloons, setBalloons] = useState<Balloon[]>([]);
     const [gameState, setGameState] = useState<'ready' | 'playing' | 'ended'>('ready');
+
+    // Use refs for values needed in intervals/loops without triggering re-renders
+    const startTimeRef = useRef<number | null>(null);
+    const animationFrameRef = useRef<number | null>(null);
+    const lastSpawnTimeRef = useRef<number>(0);
+
     const [highScore, setHighScore] = useState(() => {
         const saved = localStorage.getItem('balloonHighScore');
         return saved ? parseInt(saved) : 0;
@@ -41,59 +49,67 @@ const BalloonPop = () => {
     }, []);
 
     const popBalloon = (id: number) => {
+        // Prevent popping after game ends
+        if (gameState !== 'playing') return;
+
+        // Vibrate on mobile if supported
+        if (navigator.vibrate) navigator.vibrate(10);
+
         setBalloons(prev => prev.filter(b => b.id !== id));
         setScore(prev => prev + 1);
     };
 
     const startGame = () => {
         setScore(0);
-        setTimeLeft(30);
+        setTimeLeft(GAME_DURATION);
         setBalloons([]);
         setGameState('playing');
+        startTimeRef.current = Date.now();
+        lastSpawnTimeRef.current = 0;
     };
 
-    // Timer
+    // Main Game Loop (Timer & Spawning & Movement)
     useEffect(() => {
-        if (gameState !== 'playing') return;
+        if (gameState !== 'playing') {
+            if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+            return;
+        }
 
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    setGameState('ended');
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+        const tick = () => {
+            const now = Date.now();
+            const start = startTimeRef.current || now;
+            const elapsed = (now - start) / 1000;
+            const remaining = Math.max(0, GAME_DURATION - elapsed);
 
-        return () => clearInterval(timer);
-    }, [gameState]);
+            setTimeLeft(Math.ceil(remaining));
 
-    // Spawn balloons
-    useEffect(() => {
-        if (gameState !== 'playing') return;
+            if (remaining <= 0) {
+                setGameState('ended');
+                return;
+            }
 
-        const spawner = setInterval(() => {
-            spawnBalloon();
-        }, 500);
+            // Spawn balloons every 500ms (approx)
+            if (now - lastSpawnTimeRef.current > 500) {
+                spawnBalloon();
+                lastSpawnTimeRef.current = now;
+            }
 
-        return () => clearInterval(spawner);
-    }, [gameState, spawnBalloon]);
-
-    // Move balloons up
-    useEffect(() => {
-        if (gameState !== 'playing') return;
-
-        const mover = setInterval(() => {
+            // Move balloons
             setBalloons(prev =>
                 prev
-                    .map(b => ({ ...b, y: b.y - 2 }))
+                    .map(b => ({ ...b, y: b.y - 0.5 })) // Smoother movement speed
                     .filter(b => b.y > -20)
             );
-        }, 50);
 
-        return () => clearInterval(mover);
-    }, [gameState]);
+            animationFrameRef.current = requestAnimationFrame(tick);
+        };
+
+        animationFrameRef.current = requestAnimationFrame(tick);
+
+        return () => {
+            if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        };
+    }, [gameState, spawnBalloon]);
 
     // Save high score
     useEffect(() => {
@@ -123,7 +139,7 @@ const BalloonPop = () => {
             </div>
 
             {/* Game Area */}
-            <div className="relative bg-gradient-to-b from-sky-200 to-sky-400 rounded-2xl overflow-hidden shadow-xl"
+            <div className="relative bg-gradient-to-b from-sky-200 to-sky-400 rounded-2xl overflow-hidden shadow-xl touch-none select-none"
                 style={{ height: '60vh', minHeight: '400px', maxHeight: '500px' }}
             >
                 {gameState === 'ready' && (
@@ -132,7 +148,7 @@ const BalloonPop = () => {
                             🎈 Balloon Pop!
                         </h2>
                         <p className="text-white/80 mb-4 text-center px-4">
-                            Klik balon sebanyak-banyaknya dalam 30 detik!
+                            Klik/Sentuh balon yang muncul!
                         </p>
                         <p className="text-white/60 text-sm mb-4">
                             High Score: {highScore}
@@ -177,14 +193,16 @@ const BalloonPop = () => {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 1.5, opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            onClick={() => popBalloon(balloon.id)}
-                            className={`absolute rounded-full ${balloon.color} shadow-lg cursor-pointer active:scale-90 transition-transform`}
+                            // Handle both click and touch start for responsiveness
+                            onPointerDown={() => popBalloon(balloon.id)}
+                            className={`absolute rounded-full ${balloon.color} shadow-lg cursor-pointer active:scale-90 transition-transform touch-manipulation`}
                             style={{
                                 left: `${balloon.x}%`,
                                 top: `${balloon.y}%`,
                                 width: balloon.size,
                                 height: balloon.size * 1.2,
-                                transform: 'translate(-50%, -50%)'
+                                transform: 'translate(-50%, -50%)',
+                                WebkitTapHighlightColor: 'transparent'
                             }}
                         >
                             <div className="absolute top-1 left-1/4 w-2 h-2 bg-white/40 rounded-full" />

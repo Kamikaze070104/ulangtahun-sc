@@ -179,7 +179,7 @@ const FinaleSection = () => {
                         className="mt-6"
                     >
                         <a
-                            href="https://wa.me/6281564960617?text=Alhamdulillah%2C%20makasih%20banyak%20aa%20faizal%20%E2%9D%A4%EF%B8%8F"
+                            href="https://wa.me/6281564960617?text=Alhamdulillah%2C%20makasih%20banyak%20aa%20faizal%20❤️"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 px-8 py-3 bg-[#25D366] text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl hover:bg-[#128C7E] transition-all duration-300 active:scale-95 group"
