@@ -12,17 +12,38 @@
     --gradient-radial: radial-gradient(circle at top right, #f668a8 0%, #a855f7 50%, #7e22ce 100%);
   }
 
+  /* Keyframes for Body Gradient Animation */
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
   body {
-    @apply bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50 text-gray-900;
+    /* Animated Pastel Gradient "Cute & Dreamy" (Boosted Colors) */
+    /* Used stronger pastels (300 scale) to ensure visibility on all screens */
+    background: linear-gradient(-45deg, #f9a8d4, #c4b5fd, #67e8f9, #fde047, #fca5a5);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+
+    @apply text-gray-900;
     font-family: 'Inter', sans-serif;
+    /* Lock body scroll to prevent nested scrolling */
     overflow: hidden;
-    /* Locked to allow container to handle scroll */
     height: 100dvh;
     width: 100%;
     margin: 0;
     padding: 0;
+    /* Prevent rubber-banding on body */
     overscroll-behavior-y: none;
-    /* Prevent rubber banding on body */
   }
 
   h1,
@@ -101,7 +122,8 @@
 }
 
 .scroll-section {
-  height: 100dvh;
+  /* Allow section to grow if content is larger than viewport */
+  min-height: 100dvh;
   width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;

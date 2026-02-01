@@ -135,15 +135,18 @@ const FinaleSection = () => {
                         variants={fadeInUp}
                         className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold gradient-text leading-tight px-2"
                     >
-                        Here's to You!
+                        Yeeeyyy! udah sampe sini
                     </motion.h2>
 
                     <motion.p
                         variants={fadeInUp}
                         className="text-lg sm:text-xl md:text-2xl text-gray-700 leading-relaxed px-4"
                     >
-                        You bring so much joy, love, and light into this world.
-                        Thank you for being the amazing person you are!
+                        Baarakallah fii umrik Latifah nur aini yang ke-22 tahun
+                        semoga panjang umur, sehat selalu, dan sukses selalu. apa yang dicita-citakan
+                        semoga menjadi kenyataan, jangan mudah menyerah, hadapi semuanya aku tau kamu bisa kok
+                        semangatt ada aku disini yang selalu support kamu. doa yang terbaik buat kamu, aamiin, hadiah? hmmm.....
+                        kasih enggak yaaa?? 🤔😋😁
                     </motion.p>
 
                     <motion.p

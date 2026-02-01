@@ -19,7 +19,7 @@ const games = [
         id: 'quiz' as const,
         title: 'Birthday Quiz',
         emoji: '🎂',
-        description: 'Tebak hal-hal tentang Latifah!',
+        description: 'Tebak hal-hal tentang Faizal, berani??',
         color: 'from-purple-500 to-indigo-500'
     },
     {
@@ -75,7 +75,7 @@ const GamesPage = () => {
                             Pilih Game! 🎮
                         </h1>
                         <p className="text-gray-600 text-sm sm:text-base">
-                            Main game seru bareng Latifah~
+                            Main game seru bareng gweh~
                         </p>
                     </div>
                 )}

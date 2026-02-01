@@ -63,8 +63,8 @@ export const reasons: Reason[] = [
     },
     {
         id: 9,
-        title: "Konsisten",
-        description: "kamu konsisten banget dalam hal apapun, mulai dari hal kecil sampe hal besar.",
+        title: "unik",
+        description: "unik disini itu maksudnya gak fomo kemakan standar tiktok dll.",
         emoji: "🔥",
         color: "accent"
     },
@@ -106,14 +106,14 @@ export const reasons: Reason[] = [
     {
         id: 15,
         title: "Jujur",
-        description: "jujur banget, gak pernah bohong.",
+        description: "mulai terbuka, sering jujur cerita kalau dulu masih cukup tertutup.",
         emoji: "🗣️",
         color: "accent"
     },
     {
         id: 16,
         title: "Setia",
-        description: "setia banget, gak pernah ninggalin.",
+        description: "bayangin dari awal-awal masuk smp sampai sekarang masih berteman baik, kerenn.",
         emoji: "🤞",
         color: "primary"
     },

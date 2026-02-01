@@ -31,7 +31,7 @@ const MemoryGallery = () => {
     return (
         <section
             id="memories"
-            className="scroll-section min-h-[100dvh] flex flex-col items-center justify-start relative overflow-hidden px-4 py-12 sm:py-16"
+            className="scroll-section min-h-[100dvh] flex flex-col items-center justify-start relative px-4 py-12 sm:py-16"
         >
             {/* Background decoration */}
             <div className="absolute inset-0 -z-10">
@@ -57,13 +57,13 @@ const MemoryGallery = () => {
                     variants={fadeInUp}
                     className="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text mb-4"
                 >
-                    Our Precious Memories
+                    Foto-foto lucu kamu hehe :3
                 </motion.h2>
                 <motion.p
                     variants={fadeInUp}
                     className="text-lg sm:text-xl text-gray-600 max-w-md mx-auto"
                 >
-                    Moments we've shared that I'll cherish forever 💕
+                    Maaf aku gak bilang-bilang nyimpen foto kamu hehe, dimaafin kan? :(
                 </motion.p>
             </motion.div>
 

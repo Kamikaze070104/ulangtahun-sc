@@ -7,32 +7,57 @@ interface Question {
     correctIndex: number;
 }
 
-// TODO: Replace with actual questions about Latifah
+// Questions about Faizal for Latifah to answer
 const questions: Question[] = [
     {
-        question: "Latifah ultah yang ke berapa?",
-        options: ["20", "21", "22", "23"],
-        correctIndex: 2
+        question: "Kapan pertama kali Faizal kenal sama Latifah?",
+        options: ["SD", "SMP", "SMA", "Kuliah"],
+        correctIndex: 1 // SMP based on reasons.ts
     },
     {
-        question: "Tinggi Latifah berapa cm? (katanya)",
-        options: ["145cm", "148cm", "150cm", "152cm"],
-        correctIndex: 1
+        question: "Waifu faizal siapa :v?",
+        options: ["Latifah", "Waguri", "Hutao", "Robin"],
+        correctIndex: 0 // "Unik" based on reasons.ts
     },
     {
-        question: "Latifah orangnya gimana?",
-        options: ["Introvert", "Extrovert", "Ambivert", "Supravert"],
-        correctIndex: 0
+        question: "Apa yang ditakutkan oleh faizal?",
+        options: ["Gak ada", "Kecoa", "Begal", "Kesepian"],
+        correctIndex: 3 // "Tertutup" based on reasons.ts
     },
     {
-        question: "Latifah suka hewan apa?",
-        options: ["Anjing", "Hamster", "Kucing", "Kelinci"],
-        correctIndex: 2
+        question: "Apa makanan favorit Faizal yang tiada tandingannya?",
+        options: ["Nasi Goreng", "Mie Ayam", "Semua benar", "Bakso"],
+        correctIndex: 1 // Placeholder: Nasi Goreng
     },
     {
-        question: "Website ini dibuat dengan apa?",
-        options: ["WordPress", "Wix", "React + Vite", "HTML biasa"],
-        correctIndex: 2
+        question: "Kalau lagi gabut, Faizal biasanya ngapain?",
+        options: ["Tidur seharian", "Scroll TikTok", "Coding / Ngulik Laptop", "Jalan-jalan"],
+        correctIndex: 1 // Coding fits the profile
+    },
+    {
+        question: "Apa warna yang paling sering dipakai Faizal?",
+        options: ["Merah", "Kuning", "Hitam / Gelap", "Pink"],
+        correctIndex: 2 // Safe bet for guys/devs
+    },
+    {
+        question: "website ini dibuat pake teknologi apa?",
+        options: ["React", "Laravel", "Next", "Angular"],
+        correctIndex: 0 // Flattery answer
+    },
+    {
+        question: "Hal apa yang paling Faizal GAK suka?",
+        options: ["Dibohongi", "Dikhianati", "Disuruh-suruh", "Menunggu lama"],
+        correctIndex: 1 // Generic safe answer
+    },
+    {
+        question: "Apa yang bisa bikin faizal seneng?",
+        options: ["Senyum kamu", "Liburan", "Coding", "Jailin adik :v"],
+        correctIndex: 0 // Placeholder
+    },
+    {
+        question: "Apa harapan Faizal buat Latifah di umur 22 ini?",
+        options: ["ngerjain 1/3 :v", "Cepat lulus", "Bahagia & Panjang Umur", "Semua jawaban benar"],
+        correctIndex: 3 // The sweet ending
     }
 ];
 
@@ -76,11 +101,11 @@ const BirthdayQuiz = () => {
 
     const getResultMessage = () => {
         const percentage = (score / questions.length) * 100;
-        if (percentage === 100) return { emoji: "🏆", text: "PERFECT! Kamu tau banget!" };
-        if (percentage >= 80) return { emoji: "🎉", text: "Hebat! Kamu kenal Latifah banget!" };
+        if (percentage === 100) return { emoji: "🏆", text: "KELASS! bisa tau semua gitu, kamu intel ya??" };
+        if (percentage >= 80) return { emoji: "🎉", text: "Hebat! Kamu kenal Faizal banget!" };
         if (percentage >= 60) return { emoji: "😊", text: "Lumayan! Masih perlu kenal lebih dekat~" };
         if (percentage >= 40) return { emoji: "🤔", text: "Hmm, perlu belajar lagi nih!" };
-        return { emoji: "😅", text: "Yuk kenalan lagi sama Latifah!" };
+        return { emoji: "😅", text: "Yuk kenalan lagi sama Faizal!" };
     };
 
     return (
@@ -131,20 +156,20 @@ const BirthdayQuiz = () => {
                                     onClick={() => handleAnswer(index)}
                                     disabled={selectedAnswer !== null}
                                     className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 ${showCorrect
-                                            ? 'bg-green-100 border-2 border-green-500 text-green-700'
-                                            : showWrong
-                                                ? 'bg-red-100 border-2 border-red-500 text-red-700'
-                                                : isSelected
-                                                    ? 'bg-primary-100 border-2 border-primary-500'
-                                                    : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100 hover:border-gray-200'
+                                        ? 'bg-green-100 border-2 border-green-500 text-green-700'
+                                        : showWrong
+                                            ? 'bg-red-100 border-2 border-red-500 text-red-700'
+                                            : isSelected
+                                                ? 'bg-primary-100 border-2 border-primary-500'
+                                                : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100 hover:border-gray-200'
                                         }`}
                                 >
                                     <span className="flex items-center gap-3">
                                         <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${showCorrect
-                                                ? 'bg-green-500 text-white'
-                                                : showWrong
-                                                    ? 'bg-red-500 text-white'
-                                                    : 'bg-gray-200 text-gray-600'
+                                            ? 'bg-green-500 text-white'
+                                            : showWrong
+                                                ? 'bg-red-500 text-white'
+                                                : 'bg-gray-200 text-gray-600'
                                             }`}>
                                             {showCorrect ? '✓' : showWrong ? '✗' : String.fromCharCode(65 + index)}
                                         </span>
