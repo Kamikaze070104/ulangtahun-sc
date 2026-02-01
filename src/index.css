@@ -15,15 +15,14 @@
   body {
     @apply bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50 text-gray-900;
     font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
-    /* Ensure vertical scroll works */
-    overflow-y: auto;
-    /* Use dvh for mobile browsers */
-    min-height: 100dvh;
+    overflow: hidden;
+    /* Locked to allow container to handle scroll */
+    height: 100dvh;
     width: 100%;
-    /* Removed position: fixed to allow natural scrolling */
     margin: 0;
     padding: 0;
+    overscroll-behavior-y: none;
+    /* Prevent rubber banding on body */
   }
 
   h1,
@@ -87,32 +86,25 @@
 }
 
 /* Scroll snap container - More lenient on mobile */
+/* Scroll snap container - Strict snapping */
 .scroll-container {
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   height: 100dvh;
-  /* Ensure container takes full height */
+  width: 100%;
   overflow-y: scroll;
-  /* Enable scrolling on container */
-}
-
-@media (min-width: 768px) {
-  .scroll-container {
-    scroll-snap-type: y mandatory;
-  }
+  overscroll-behavior-y: contain;
+  /* Critical for Android momentum control */
+  scroll-snap-stop: always;
 }
 
 .scroll-section {
+  height: 100dvh;
+  width: 100%;
   scroll-snap-align: start;
-  scroll-snap-stop: normal;
-}
-
-@media (min-width: 768px) {
-  .scroll-section {
-    scroll-snap-stop: always;
-  }
+  scroll-snap-stop: always;
 }
 
 /* Mobile tap highlight */

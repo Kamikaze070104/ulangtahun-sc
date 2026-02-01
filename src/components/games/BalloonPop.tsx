@@ -27,10 +27,12 @@ const BalloonPop = () => {
     const [balloons, setBalloons] = useState<Balloon[]>([]);
     const [gameState, setGameState] = useState<'ready' | 'playing' | 'ended'>('ready');
 
-    // Use refs for values needed in intervals/loops without triggering re-renders
+    // Refs
+    const containerRef = useRef<HTMLDivElement>(null);
     const startTimeRef = useRef<number | null>(null);
     const animationFrameRef = useRef<number | null>(null);
     const lastSpawnTimeRef = useRef<number>(0);
+    const lastTickRef = useRef<number>(0);
 
     const [highScore, setHighScore] = useState(() => {
         const saved = localStorage.getItem('balloonHighScore');
@@ -38,10 +40,13 @@ const BalloonPop = () => {
     });
 
     const spawnBalloon = useCallback(() => {
+        // Use container height for pixel-based positioning
+        const containerHeight = containerRef.current?.clientHeight || 500;
+
         const newBalloon: Balloon = {
             id: Date.now() + Math.random(),
-            x: 10 + Math.random() * 80,
-            y: 100 + Math.random() * 20,
+            x: 10 + Math.random() * 80, // Keep X as percentage for ease
+            y: containerHeight + 100, // Start below the container (in pixels)
             color: colors[Math.floor(Math.random() * colors.length)],
             size: 40 + Math.random() * 30
         };
@@ -66,6 +71,7 @@ const BalloonPop = () => {
         setGameState('playing');
         startTimeRef.current = Date.now();
         lastSpawnTimeRef.current = 0;
+        lastTickRef.current = Date.now();
     };
 
     // Main Game Loop (Timer & Spawning & Movement)
@@ -77,6 +83,12 @@ const BalloonPop = () => {
 
         const tick = () => {
             const now = Date.now();
+
+            // Calculate delta time
+            // If this is the first frame, use a small default delta
+            const deltaTime = lastTickRef.current === 0 ? 0.016 : (now - lastTickRef.current) / 1000;
+            lastTickRef.current = now;
+
             const start = startTimeRef.current || now;
             const elapsed = (now - start) / 1000;
             const remaining = Math.max(0, GAME_DURATION - elapsed);
@@ -88,21 +100,28 @@ const BalloonPop = () => {
                 return;
             }
 
-            // Spawn balloons every 500ms (approx)
+            // Spawn balloons every 500ms
             if (now - lastSpawnTimeRef.current > 500) {
                 spawnBalloon();
                 lastSpawnTimeRef.current = now;
             }
 
             // Move balloons
+            // Target speed: 150 pixels per second
+            const moveSpeed = 150;
+
             setBalloons(prev =>
                 prev
-                    .map(b => ({ ...b, y: b.y - 0.5 })) // Smoother movement speed
-                    .filter(b => b.y > -20)
+                    .map(b => ({ ...b, y: b.y - (moveSpeed * deltaTime) }))
+                    .filter(b => b.y > -150) // Allow to float well above
             );
 
             animationFrameRef.current = requestAnimationFrame(tick);
         };
+
+        // Initialize tick ref
+        lastTickRef.current = Date.now();
+        lastSpawnTimeRef.current = Date.now();
 
         animationFrameRef.current = requestAnimationFrame(tick);
 
@@ -138,8 +157,10 @@ const BalloonPop = () => {
                 </div>
             </div>
 
-            {/* Game Area */}
-            <div className="relative bg-gradient-to-b from-sky-200 to-sky-400 rounded-2xl overflow-hidden shadow-xl touch-none select-none"
+            {/* Game Area using ref for measurements */}
+            <div
+                ref={containerRef}
+                className="relative bg-gradient-to-b from-sky-200 to-sky-400 rounded-2xl overflow-hidden shadow-xl touch-none select-none"
                 style={{ height: '60vh', minHeight: '400px', maxHeight: '500px' }}
             >
                 {gameState === 'ready' && (
@@ -195,14 +216,15 @@ const BalloonPop = () => {
                             transition={{ duration: 0.15 }}
                             // Handle both click and touch start for responsiveness
                             onPointerDown={() => popBalloon(balloon.id)}
-                            className={`absolute rounded-full ${balloon.color} shadow-lg cursor-pointer active:scale-90 transition-transform touch-manipulation`}
+                            className={`absolute rounded-full ${balloon.color} shadow-lg cursor-pointer active:scale-90 touch-manipulation`}
                             style={{
                                 left: `${balloon.x}%`,
-                                top: `${balloon.y}%`,
+                                top: 0,
                                 width: balloon.size,
                                 height: balloon.size * 1.2,
-                                transform: 'translate(-50%, -50%)',
-                                WebkitTapHighlightColor: 'transparent'
+                                transform: `translate(-50%, ${balloon.y}px)`, // GPU accelerated movement
+                                WebkitTapHighlightColor: 'transparent',
+                                willChange: 'transform' // Performance optimization hint
                             }}
                         >
                             <div className="absolute top-1 left-1/4 w-2 h-2 bg-white/40 rounded-full" />
