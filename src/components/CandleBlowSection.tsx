@@ -1,24 +1,121 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { fadeInUp, scaleIn, staggerContainer } from '../constants/animations';
+import { Mic } from 'lucide-react';
 
 /**
  * Candle Blow Section Component
  * Beautiful birthday cake with number "22" candles based on reference image
  * Features: Golden glittery number candles, two-tier pink cake, flower decorations
+ * UPDATE: Added microphone interaction to blow out candles
  */
 
 const CandleBlowSection = () => {
     const [candlesLit, setCandlesLit] = useState(true);
     const [hasBlown, setHasBlown] = useState(false);
     const [isBlowing, setIsBlowing] = useState(false);
+    const [micPermission, setMicPermission] = useState<boolean | null>(null);
+    const [audioVolume, setAudioVolume] = useState(0);
+    const [isHolding, setIsHolding] = useState(false);
+    const isHoldingRef = useRef(false);
+
+    const audioContextRef = useRef<AudioContext | null>(null);
+    const analyserRef = useRef<AnalyserNode | null>(null);
+    const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null);
+    const animationFrameRef = useRef<number | null>(null);
+
+    const sectionRef = useRef<HTMLElement>(null);
+    const isInView = useInView(sectionRef, { amount: 0.5 });
+
+    // Initialize Microphone
+    useEffect(() => {
+        if (!isInView || !candlesLit || hasBlown) {
+            setAudioVolume(0);
+            return;
+        }
+
+        const initMic = async () => {
+            try {
+                // Check if browser supports getUserMedia
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    setMicPermission(false);
+                    return;
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                setMicPermission(true);
+
+                const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+                audioContextRef.current = audioContext;
+
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 512;
+                analyser.smoothingTimeConstant = 0.4;
+                analyserRef.current = analyser;
+
+                const microphone = audioContext.createMediaStreamSource(stream);
+                microphoneRef.current = microphone;
+                microphone.connect(analyser);
+
+                detectBlow();
+            } catch (err) {
+                console.error("Microphone access denied:", err);
+                setMicPermission(false);
+            }
+        };
+
+        initMic();
+
+        return () => {
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current);
+            }
+            if (audioContextRef.current) {
+                audioContextRef.current.close();
+            }
+        };
+    }, [isInView, candlesLit, hasBlown]);
+
+    const detectBlow = () => {
+        if (!analyserRef.current) return;
+
+        const bufferLength = analyserRef.current.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyserRef.current.getByteFrequencyData(dataArray);
+
+        // Calculate average volume
+        let sum = 0;
+        for (let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
+        }
+        const average = sum / bufferLength;
+
+        if (isHoldingRef.current) {
+            setAudioVolume(average);
+
+            // Threshold for "blowing" (adjust as needed)
+            // Blowing creates a lot of low-end noise, but overall volume is a decent proxy
+            if (average > 40 && candlesLit && !isBlowing) {
+                blowCandles();
+            }
+        } else {
+            setAudioVolume(0);
+        }
+
+        animationFrameRef.current = requestAnimationFrame(detectBlow);
+    };
 
     const blowCandles = () => {
         if (!candlesLit || isBlowing) return;
 
         setIsBlowing(true);
         setCandlesLit(false);
+
+        // Stop listening to mic
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+        }
 
         setTimeout(() => {
             setHasBlown(true);
@@ -30,6 +127,7 @@ const CandleBlowSection = () => {
     const relightCandles = () => {
         setCandlesLit(true);
         setHasBlown(false);
+        // Effect will re-run to restart mic
     };
 
     const triggerCelebration = () => {
@@ -62,8 +160,24 @@ const CandleBlowSection = () => {
         }, 200);
     };
 
+    const handlePressStart = (e: any) => {
+        e.preventDefault();
+        if (micPermission) {
+            setIsHolding(true);
+            isHoldingRef.current = true;
+        }
+    };
+
+    const handlePressEnd = () => {
+        if (micPermission) {
+            setIsHolding(false);
+            isHoldingRef.current = false;
+        }
+    };
+
     return (
         <section
+            ref={sectionRef}
             id="candle-blow"
             className="scroll-section min-h-[100dvh] flex items-center justify-center relative overflow-hidden px-4 py-12"
         >
@@ -112,7 +226,9 @@ const CandleBlowSection = () => {
                         <p className="text-lg sm:text-xl text-gray-600">
                             {hasBlown
                                 ? 'Semoga semua harapanmu terkabul!'
-                                : 'Pejamkan mata, buat harapan, lalu tiup lilinnya!'}
+                                : micPermission === false
+                                    ? 'Tekan tombol di bawah untuk tiup lilin!'
+                                    : 'Tahan tombol 🎙️ di bawah sambil tiup lilinnya! 💨'}
                         </p>
                     </motion.div>
 
@@ -215,25 +331,44 @@ const CandleBlowSection = () => {
                     {/* Action Button */}
                     <motion.div
                         variants={fadeInUp}
-                        className="flex justify-center"
+                        className="flex flex-col items-center gap-4"
                     >
                         {!hasBlown ? (
-                            <motion.button
-                                onClick={blowCandles}
-                                disabled={isBlowing || !candlesLit}
-                                className="blow-button"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <span className="blow-button-bg" />
-                                <span className="blow-button-text">
-                                    {isBlowing ? (
-                                        <><span className="animate-pulse">💨</span> Meniup...</>
-                                    ) : (
-                                        <><span>🌬️</span> Tiup Lilin!</>
-                                    )}
-                                </span>
-                            </motion.button>
+                            <>
+                                {micPermission === true && (
+                                    <div className="flex items-center gap-2 text-primary-600 bg-white/50 px-4 py-2 rounded-full backdrop-blur-sm">
+                                        <Mic className={`w-5 h-5 ${isHolding && audioVolume > 10 ? 'animate-pulse text-red-500' : ''}`} />
+                                        <span className="text-sm font-medium">
+                                            {isHolding ? 'Mendengarkan...' : 'Microphone Siap'}
+                                        </span>
+                                    </div>
+                                )}
+
+                                <motion.button
+                                    onPointerDown={handlePressStart}
+                                    onPointerUp={handlePressEnd}
+                                    onPointerLeave={handlePressEnd}
+                                    onPointerCancel={handlePressEnd}
+                                    onContextMenu={(e) => e.preventDefault()}
+                                    onClick={!micPermission ? blowCandles : undefined}
+                                    disabled={isBlowing || !candlesLit}
+                                    className="blow-button"
+                                    style={{ touchAction: 'none', userSelect: 'none', WebkitUserSelect: 'none' }}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <span className="blow-button-bg" />
+                                    <span className="blow-button-text">
+                                        {isBlowing ? (
+                                            <><span className="animate-pulse">💨</span> Meniup...</>
+                                        ) : isHolding ? (
+                                            <><span className="animate-pulse">🌬️</span> Tiup Sekarang!</>
+                                        ) : (
+                                            <><span>🎙️</span> {micPermission ? 'Tahan & Tiup' : 'Tiup Lilin!'}</>
+                                        )}
+                                    </span>
+                                </motion.button>
+                            </>
                         ) : (
                             <motion.button
                                 onClick={relightCandles}

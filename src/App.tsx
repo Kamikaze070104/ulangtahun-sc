@@ -8,6 +8,7 @@ import ProgressBar from './components/ProgressBar';
 import LoadingOverlay from './components/LoadingOverlay';
 import MemoryGallery from './components/MemoryGallery';
 import CandleBlowSection from './components/CandleBlowSection';
+import AudioPlayer from './components/AudioPlayer';
 import GamesPage from './pages/GamesPage';
 import { getAllReasons } from './data/reasons';
 import { useScrollTracking } from './hooks/useScrollTracking';
@@ -34,6 +35,9 @@ function HomePage() {
     <>
       {/* Loading Overlay - shows on first visit/refresh */}
       {isLoading && <LoadingOverlay onLoadingComplete={handleLoadingComplete} />}
+
+      {/* Floating Audio Player */}
+      <AudioPlayer />
 
       <main
         ref={containerRef}

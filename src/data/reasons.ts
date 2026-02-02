@@ -8,21 +8,21 @@ export const reasons: Reason[] = [
     {
         id: 1,
         title: "Konsisten",
-        description: "Kamu konsisten banget dalam hal apapun, mulai dari hal kecil sampe hal besar.",
+        description: "selama aku kenal kamu, aku lihat kamu konsisten dalam beribadah, belajar, dll. pertahankan yaa.",
         emoji: "🎯",
         color: "primary"
     },
     {
         id: 2,
         title: "Baik hati dan tidak sombong",
-        description: "Kamu baik banget dan gak pernah sombong, selalu rendah hati.",
+        description: "Kalau baik hati jelass, itu yang bikin aku suka. kalo sombong selama kenal kamu gapernah liat kamu sombong.",
         emoji: "💖",
         color: "secondary"
     },
     {
         id: 3,
         title: "Pinter",
-        description: "Kamu pinter banget, selalu bisa ngasih solusi buat masalah.",
+        description: "Pinter bukan cuma soal akademik aja kak, tapi pinter dalam bersikap, pinter dalam menghadapi masalah, dll.",
         emoji: "🧠",
         color: "accent"
     },
@@ -43,42 +43,42 @@ export const reasons: Reason[] = [
     {
         id: 6,
         title: "Cantik",
-        description: "kamu perempuan paling cantik yang pernah aku liat.",
+        description: "kamu perempuan paling cantik yang pernah aku liat, semangat yaa cantik.",
         emoji: "😁",
         color: "accent"
     },
     {
         id: 7,
         title: "Rajin Menabung",
-        description: "wkwkwkwk gatau sih tapi mungkin aja :v.",
+        description: "wkwkwkwk gatau sih tapi mungkin aja aku gatau soalnya, tapi aku yakin kamu rajin menabung.",
         emoji: "💰",
         color: "secondary"
     },
     {
         id: 8,
         title: "Sholehah",
-        description: "aamiin ya robbal aalamin.",
+        description: "aamiin ya robbal aalamin, semoga istiqomah yaa.",
         emoji: "👍",
         color: "secondary"
     },
     {
         id: 9,
         title: "unik",
-        description: "unik disini itu maksudnya gak fomo kemakan standar tiktok dll.",
+        description: "unik disini itu maksudnya gak fomo kemakan standar tiktok dll, keren sih tidak terbawa arus.",
         emoji: "🔥",
         color: "accent"
     },
     {
         id: 10,
         title: "Penyabar",
-        description: "keren sih sabar banget wkwkwk.",
+        description: "sabar dalam menghadapi masalah.",
         emoji: "😇",
         color: "primary"
     },
     {
         id: 11,
         title: "Penyayang",
-        description: "sayang kucing? :v.",
+        description: "waktu aku pertama kali denger kamu suka ngasih makan kucing yang lewat, disitu aku simpulin kamu itu penyayang, ak jg mw.",
         emoji: "🐱",
         color: "secondary"
     },
@@ -92,7 +92,7 @@ export const reasons: Reason[] = [
     {
         id: 13,
         title: "Mau Belajar",
-        description: "mau belajar hal baru.",
+        description: "mau belajar hal baru walaupun pelan pelan yang penting berusaha.",
         emoji: "📚",
         color: "primary"
     },
@@ -127,14 +127,14 @@ export const reasons: Reason[] = [
     {
         id: 18,
         title: "Pemalu",
-        description: "pemalu apa malu maluin? wkwkwk.",
+        description: "nah ini yang jadi point plus dari kamu, pemalu tapi bikin gemes tapi tetep harus berani bersosialisasi yaa.",
         emoji: "🫣",
         color: "accent"
     },
     {
         id: 19,
-        title: "Beda Dari Cewe Lain",
-        description: "keren sih gak mau pacaran karena belum halal.",
+        title: "Ramah",
+        description: "ramah dan punya senyum yang manis.",
         emoji: "😱",
         color: "primary"
     },
