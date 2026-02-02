@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 interface Question {
     question: string;
     options: string[];
-    correctIndex: number;
+    correctIndex: number | number[];
 }
 
 // Questions about Faizal for Latifah to answer
@@ -20,34 +20,34 @@ const questions: Question[] = [
         correctIndex: 0 // "Unik" based on reasons.ts
     },
     {
-        question: "Apa yang ditakutkan oleh faizal?",
-        options: ["Gak ada", "Kecoa", "Begal", "Kesepian"],
-        correctIndex: 3 // "Tertutup" based on reasons.ts
+        question: "kapan pertama kali kita jalan bareng",
+        options: ["Gak ada", "pulang dari muara", "gacoan", "tegalega"],
+        correctIndex: 1 // "Tertutup" based on reasons.ts
     },
     {
-        question: "Apa makanan favorit Faizal yang tiada tandingannya?",
-        options: ["Nasi Goreng", "Mie Ayam", "Semua benar", "Bakso"],
-        correctIndex: 1 // Placeholder: Nasi Goreng
+        question: "Apa hobi latifah :v?",
+        options: ["Masak", "Olahraga", "Makan", "Tidur"],
+        correctIndex: 3 // Placeholder: Nasi Goreng
     },
     {
-        question: "Kalau lagi gabut, Faizal biasanya ngapain?",
-        options: ["Tidur seharian", "Scroll TikTok", "Coding / Ngulik Laptop", "Jalan-jalan"],
+        question: "Apa yang ditakutin latifah?",
+        options: ["Tikus", "Kecoa", "Cicak", "kucing"],
         correctIndex: 1 // Coding fits the profile
     },
     {
-        question: "Apa warna yang paling sering dipakai Faizal?",
+        question: "Apa warna kesukaan latifah?",
         options: ["Merah", "Kuning", "Hitam / Gelap", "Pink"],
         correctIndex: 2 // Safe bet for guys/devs
     },
     {
-        question: "website ini dibuat pake teknologi apa?",
+        question: "website ini dibuat pake teknologi apa? (iseng dikit :v)",
         options: ["React", "Laravel", "Next", "Angular"],
         correctIndex: 0 // Flattery answer
     },
     {
-        question: "Hal apa yang paling Faizal GAK suka?",
-        options: ["Dibohongi", "Dikhianati", "Disuruh-suruh", "Menunggu lama"],
-        correctIndex: 1 // Generic safe answer
+        question: "Apakah Faizal suka Latifah?",
+        options: ["Iya", "Yes", "Enya", "Pasti"],
+        correctIndex: [0, 1, 2, 3] // All answers are correct!
     },
     {
         question: "Apa yang bisa bikin faizal seneng?",
@@ -72,7 +72,11 @@ const BirthdayQuiz = () => {
         if (selectedAnswer !== null) return;
 
         setSelectedAnswer(index);
-        const isCorrect = index === questions[currentQ].correctIndex;
+
+        const currentCorrect = questions[currentQ].correctIndex;
+        const isCorrect = Array.isArray(currentCorrect)
+            ? currentCorrect.includes(index)
+            : index === currentCorrect;
 
         if (isCorrect) {
             setScore(prev => prev + 1);
@@ -102,10 +106,10 @@ const BirthdayQuiz = () => {
     const getResultMessage = () => {
         const percentage = (score / questions.length) * 100;
         if (percentage === 100) return { emoji: "🏆", text: "KELASS! bisa tau semua gitu, kamu intel ya??" };
-        if (percentage >= 80) return { emoji: "🎉", text: "Hebat! Kamu kenal Faizal banget!" };
-        if (percentage >= 60) return { emoji: "😊", text: "Lumayan! Masih perlu kenal lebih dekat~" };
+        if (percentage >= 80) return { emoji: "🎉", text: "Hebat! Kerja bagus!" };
+        if (percentage >= 60) return { emoji: "😊", text: "Lumayan!" };
         if (percentage >= 40) return { emoji: "🤔", text: "Hmm, perlu belajar lagi nih!" };
-        return { emoji: "😅", text: "Yuk kenalan lagi sama Faizal!" };
+        return { emoji: "😅", text: "Yuk belajar lagi!" };
     };
 
     return (
@@ -145,7 +149,11 @@ const BirthdayQuiz = () => {
                     <div className="p-4 sm:p-6 space-y-3">
                         {questions[currentQ].options.map((option, index) => {
                             const isSelected = selectedAnswer === index;
-                            const isCorrect = index === questions[currentQ].correctIndex;
+                            const currentCorrect = questions[currentQ].correctIndex;
+                            const isCorrect = Array.isArray(currentCorrect)
+                                ? currentCorrect.includes(index)
+                                : index === currentCorrect;
+
                             const showCorrect = showResult && isCorrect;
                             const showWrong = showResult && isSelected && !isCorrect;
 

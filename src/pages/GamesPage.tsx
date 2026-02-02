@@ -19,7 +19,7 @@ const games = [
         id: 'quiz' as const,
         title: 'Birthday Quiz',
         emoji: '🎂',
-        description: 'Tebak hal-hal tentang Faizal, berani??',
+        description: 'Tebak-tebakan tentang Latifah',
         color: 'from-purple-500 to-indigo-500'
     },
     {

@@ -14,11 +14,17 @@ export const useScrollTracking = () => {
 
         // Find which section is currently in view
         let currentSection = 0;
+        let minDistance = Infinity;
+
         sections.forEach((section, index) => {
             const rect = section.getBoundingClientRect();
-            const isInView = rect.top >= -100 && rect.top <= 200;
+            // Calculate distance from top of viewport (considering offset)
+            const distance = Math.abs(rect.top);
 
-            if (isInView) {
+            // If this section is closer to the top than the previous closest
+            // AND it's within a reasonable range to be considered "active"
+            if (distance < minDistance && rect.top < window.innerHeight / 2 && rect.bottom > 0) {
+                minDistance = distance;
                 currentSection = index;
             }
         });

@@ -33,6 +33,7 @@ const BalloonPop = () => {
     const animationFrameRef = useRef<number | null>(null);
     const lastSpawnTimeRef = useRef<number>(0);
     const lastTickRef = useRef<number>(0);
+    const poppedBalloonsRef = useRef<Set<number>>(new Set());
 
     const [highScore, setHighScore] = useState(() => {
         const saved = localStorage.getItem('balloonHighScore');
@@ -57,6 +58,10 @@ const BalloonPop = () => {
         // Prevent popping after game ends
         if (gameState !== 'playing') return;
 
+        // Prevent double counting
+        if (poppedBalloonsRef.current.has(id)) return;
+        poppedBalloonsRef.current.add(id);
+
         // Vibrate on mobile if supported
         if (navigator.vibrate) navigator.vibrate(10);
 
@@ -72,6 +77,7 @@ const BalloonPop = () => {
         startTimeRef.current = Date.now();
         lastSpawnTimeRef.current = 0;
         lastTickRef.current = Date.now();
+        poppedBalloonsRef.current.clear();
     };
 
     // Main Game Loop (Timer & Spawning & Movement)
@@ -222,9 +228,9 @@ const BalloonPop = () => {
                                 top: 0,
                                 width: balloon.size,
                                 height: balloon.size * 1.2,
-                                transform: `translate(-50%, ${balloon.y}px)`, // GPU accelerated movement
+                                y: balloon.y,
+                                x: '-50%',
                                 WebkitTapHighlightColor: 'transparent',
-                                willChange: 'transform' // Performance optimization hint
                             }}
                         >
                             <div className="absolute top-1 left-1/4 w-2 h-2 bg-white/40 rounded-full" />
