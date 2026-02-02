@@ -94,9 +94,11 @@ const CandleBlowSection = () => {
         if (isHoldingRef.current) {
             setAudioVolume(average);
 
-            // Threshold for "blowing" (adjust as needed)
-            // Blowing creates a lot of low-end noise, but overall volume is a decent proxy
-            if (average > 40 && candlesLit && !isBlowing) {
+            // Threshold for "blowing" (adjusted for better sensitivity)
+            // Lowered from 40 to 20 based on user feedback
+            const BLOW_THRESHOLD = 20;
+
+            if (average > BLOW_THRESHOLD && candlesLit && !isBlowing) {
                 blowCandles();
             }
         } else {
