@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Trophy, PartyPopper, Smile, Brain, Frown, Check, X, RotateCcw } from 'lucide-react';
 
 interface Question {
     question: string;
@@ -7,57 +8,56 @@ interface Question {
     correctIndex: number | number[];
 }
 
-// Questions about Faizal for Latifah to answer
 const questions: Question[] = [
     {
         question: "Kapan pertama kali Faizal kenal sama Latifah?",
         options: ["SD", "SMP", "SMA", "Kuliah"],
-        correctIndex: 1 // SMP based on reasons.ts
+        correctIndex: 1
     },
     {
         question: "Waifu faizal siapa :v?",
         options: ["Latifah", "Waguri", "Hutao", "Robin"],
-        correctIndex: 0 // "Unik" based on reasons.ts
+        correctIndex: 0
     },
     {
         question: "kapan pertama kali kita jalan bareng",
         options: ["Gak ada", "pulang dari muara", "gacoan", "tegalega"],
-        correctIndex: 1 // "Tertutup" based on reasons.ts
+        correctIndex: 1
     },
     {
         question: "Apa hobi latifah :v?",
         options: ["Masak", "Olahraga", "Makan", "Tidur"],
-        correctIndex: 3 // Placeholder: Nasi Goreng
+        correctIndex: 3
     },
     {
         question: "Apa yang ditakutin latifah?",
         options: ["Tikus", "Kecoa", "Cicak", "kucing"],
-        correctIndex: 1 // Coding fits the profile
+        correctIndex: 1
     },
     {
         question: "Apa warna kesukaan latifah?",
         options: ["Merah", "Kuning", "Hitam / Gelap", "Pink"],
-        correctIndex: 2 // Safe bet for guys/devs
+        correctIndex: 2
     },
     {
         question: "website ini dibuat pake teknologi apa? (iseng dikit :v)",
         options: ["React", "Laravel", "Next", "Angular"],
-        correctIndex: 0 // Flattery answer
+        correctIndex: 0
     },
     {
         question: "Apakah Faizal suka Latifah?",
         options: ["Iya", "Yes", "Enya", "Pasti"],
-        correctIndex: [0, 1, 2, 3] // All answers are correct!
+        correctIndex: [0, 1, 2, 3]
     },
     {
         question: "Apa yang bisa bikin faizal seneng?",
         options: ["Senyum kamu", "Liburan", "Coding", "Jailin adik :v"],
-        correctIndex: 0 // Placeholder
+        correctIndex: 0
     },
     {
         question: "Apa harapan Faizal buat Latifah di umur 22 ini?",
         options: ["ngerjain 1/3 :v", "Cepat lulus", "Bahagia & Panjang Umur", "Semua jawaban benar"],
-        correctIndex: 3 // The sweet ending
+        correctIndex: 3
     }
 ];
 
@@ -105,11 +105,11 @@ const BirthdayQuiz = () => {
 
     const getResultMessage = () => {
         const percentage = (score / questions.length) * 100;
-        if (percentage === 100) return { emoji: "🏆", text: "KELASS! bisa tau semua gitu, kamu intel ya??" };
-        if (percentage >= 80) return { emoji: "🎉", text: "Hebat! Kerja bagus!" };
-        if (percentage >= 60) return { emoji: "😊", text: "Lumayan!" };
-        if (percentage >= 40) return { emoji: "🤔", text: "Hmm, perlu belajar lagi nih!" };
-        return { emoji: "😅", text: "Yuk belajar lagi!" };
+        if (percentage === 100) return { icon: Trophy, text: "KELASS! bisa tau semua gitu, kamu intel ya??" };
+        if (percentage >= 80) return { icon: PartyPopper, text: "Hebat! Kerja bagus!" };
+        if (percentage >= 60) return { icon: Smile, text: "Lumayan!" };
+        if (percentage >= 40) return { icon: Brain, text: "Hmm, perlu belajar lagi nih!" };
+        return { icon: Frown, text: "Yuk belajar lagi!" };
     };
 
     return (
@@ -120,33 +120,34 @@ const BirthdayQuiz = () => {
             className="max-w-xl mx-auto"
         >
             {!gameEnded ? (
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="neo-box bg-white overflow-hidden">
                     {/* Progress bar */}
-                    <div className="h-2 bg-gray-100">
+                    <div className="h-6 bg-white border-b-4 border-dark flex">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-primary-500 to-secondary-500"
+                            className="h-full bg-accent border-r-4 border-dark"
                             initial={{ width: 0 }}
                             animate={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
+                            transition={{ type: 'spring', bounce: 0 }}
                         />
                     </div>
 
                     {/* Question header */}
-                    <div className="p-4 sm:p-6 border-b border-gray-100">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm text-gray-500">
-                                Pertanyaan {currentQ + 1}/{questions.length}
+                    <div className="p-6 sm:p-8 border-b-4 border-dark bg-secondary">
+                        <div className="flex justify-between items-center mb-4">
+                            <span className="text-sm font-black text-dark tracking-widest uppercase bg-white border-2 border-dark px-3 py-1">
+                                Q {currentQ + 1}/{questions.length}
                             </span>
-                            <span className="text-sm font-semibold text-primary-600">
-                                Skor: {score}
+                            <span className="text-sm font-black text-dark tracking-widest uppercase bg-white border-2 border-dark px-3 py-1">
+                                SKOR: {score}
                             </span>
                         </div>
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+                        <h2 className="text-xl sm:text-2xl font-black text-dark uppercase tracking-tight">
                             {questions[currentQ].question}
                         </h2>
                     </div>
 
                     {/* Options */}
-                    <div className="p-4 sm:p-6 space-y-3">
+                    <div className="p-6 sm:p-8 space-y-4 bg-white">
                         {questions[currentQ].options.map((option, index) => {
                             const isSelected = selectedAnswer === index;
                             const currentCorrect = questions[currentQ].correctIndex;
@@ -163,25 +164,25 @@ const BirthdayQuiz = () => {
                                     whileTap={{ scale: selectedAnswer === null ? 0.98 : 1 }}
                                     onClick={() => handleAnswer(index)}
                                     disabled={selectedAnswer !== null}
-                                    className={`w-full p-4 rounded-xl text-left font-medium transition-all duration-300 ${showCorrect
-                                        ? 'bg-green-100 border-2 border-green-500 text-green-700'
+                                    className={`w-full p-4 border-4 border-dark text-left font-bold uppercase transition-all duration-300 flex items-center justify-between ${showCorrect
+                                        ? 'bg-green-400 translate-x-1 translate-y-1'
                                         : showWrong
-                                            ? 'bg-red-100 border-2 border-red-500 text-red-700'
+                                            ? 'bg-red-400 translate-x-1 translate-y-1'
                                             : isSelected
-                                                ? 'bg-primary-100 border-2 border-primary-500'
-                                                : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100 hover:border-gray-200'
+                                                ? 'bg-primary'
+                                                : 'bg-white hover:bg-primary-100 hover:-translate-y-1 hover:shadow-neo'
                                         }`}
                                 >
-                                    <span className="flex items-center gap-3">
-                                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${showCorrect
-                                            ? 'bg-green-500 text-white'
+                                    <span className="flex items-center gap-4">
+                                        <span className={`w-10 h-10 border-4 border-dark flex items-center justify-center text-lg font-black ${showCorrect
+                                            ? 'bg-white text-green-600'
                                             : showWrong
-                                                ? 'bg-red-500 text-white'
-                                                : 'bg-gray-200 text-gray-600'
+                                                ? 'bg-white text-red-600'
+                                                : 'bg-secondary text-dark'
                                             }`}>
-                                            {showCorrect ? '✓' : showWrong ? '✗' : String.fromCharCode(65 + index)}
+                                            {showCorrect ? <Check strokeWidth={4} className="w-6 h-6" /> : showWrong ? <X strokeWidth={4} className="w-6 h-6" /> : String.fromCharCode(65 + index)}
                                         </span>
-                                        {option}
+                                        <span className="text-dark tracking-wide">{option}</span>
                                     </span>
                                 </motion.button>
                             );
@@ -192,21 +193,37 @@ const BirthdayQuiz = () => {
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 text-center"
+                    className="neo-box bg-accent p-8 sm:p-12 text-center"
                 >
-                    <div className="text-6xl mb-4">{getResultMessage().emoji}</div>
-                    <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-2">
-                        Quiz Selesai!
+                    {(() => {
+                        const ResultIcon = getResultMessage().icon;
+                        return (
+                            <div className="bg-white border-4 border-dark w-24 h-24 mx-auto flex items-center justify-center mb-8 shadow-neo animate-bounce-neo">
+                                <ResultIcon className="w-12 h-12 text-dark" />
+                            </div>
+                        );
+                    })()}
+                    
+                    <h2 className="text-4xl sm:text-5xl font-black text-dark uppercase mb-4 tracking-tighter">
+                        QUIZ SELESAI!
                     </h2>
-                    <p className="text-gray-600 mb-4">{getResultMessage().text}</p>
-                    <div className="text-4xl font-bold text-primary-600 mb-6">
-                        {score}/{questions.length}
+                    <p className="text-xl font-bold text-dark border-b-4 border-dark inline-block pb-2 mb-8 uppercase">
+                        {getResultMessage().text}
+                    </p>
+                    
+                    <div className="neo-box bg-white inline-block px-8 py-4 mb-8">
+                        <div className="text-sm font-black text-dark tracking-widest uppercase mb-1">SKOR AKHIR</div>
+                        <div className="text-5xl font-black text-primary" style={{ textShadow: '4px 4px 0 #1a1a1a' }}>
+                            {score}/{questions.length}
+                        </div>
                     </div>
+                    
                     <button
                         onClick={restartQuiz}
-                        className="px-8 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all"
+                        className="neo-btn bg-secondary w-full px-8 py-4 flex items-center justify-center gap-3 text-lg"
                     >
-                        Main Lagi! 🔄
+                        <RotateCcw className="w-6 h-6" />
+                        <span>MAIN LAGI</span>
                     </button>
                 </motion.div>
             )}

@@ -1,14 +1,8 @@
 import { motion } from 'framer-motion';
 import Masonry from './Masonry';
 import { fadeInUp, staggerContainer } from '../constants/animations';
+import { Camera, Heart } from 'lucide-react';
 
-/**
- * Memory Gallery Section
- * Displays a beautiful masonry grid of memory photos
- * Placed between the last reason card and finale section
- */
-
-// Photo data with varying heights for masonry effect
 const memoryPhotos = [
     { id: 1, image: '/assets/1.webp', height: 350 },
     { id: 2, image: '/assets/2.webp', height: 280 },
@@ -21,10 +15,10 @@ const memoryPhotos = [
     { id: 9, image: '/assets/9.webp', height: 350 },
     { id: 10, image: '/assets/10.webp', height: 270 },
     { id: 11, image: '/assets/11.webp', height: 230 },
-    { id: 12, image: '/assets/12.webp', height: 380 },  // Portrait orientation - tall
+    { id: 12, image: '/assets/12.webp', height: 380 },
     { id: 13, image: '/assets/13.webp', height: 290 },
     { id: 14, image: '/assets/14.webp', height: 260 },
-    { id: 15, image: '/assets/15.webp', height: 300 },  // Family photo - square-ish
+    { id: 15, image: '/assets/15.webp', height: 300 },
 ];
 
 const MemoryGallery = () => {
@@ -33,37 +27,32 @@ const MemoryGallery = () => {
             id="memories"
             className="scroll-section min-h-[100dvh] flex flex-col items-center justify-start relative px-4 py-12 sm:py-16"
         >
-            {/* Background decoration */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-1/4 left-10 w-48 h-48 sm:w-64 sm:h-64 bg-primary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" />
-                <div className="absolute bottom-1/4 right-10 w-48 h-48 sm:w-64 sm:h-64 bg-secondary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '2s' }} />
-            </div>
-
-            {/* Header */}
             <motion.div
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="text-center mb-8 sm:mb-12"
+                className="text-center mb-12 neo-box bg-white p-8 max-w-3xl w-full mx-auto"
             >
                 <motion.div
                     variants={fadeInUp}
-                    className="text-5xl sm:text-6xl mb-4"
+                    className="flex justify-center mb-6"
                 >
-                    📸
+                    <div className="bg-primary p-4 border-4 border-dark shadow-neo transform -rotate-3">
+                        <Camera className="w-12 h-12 text-dark" />
+                    </div>
                 </motion.div>
                 <motion.h2
                     variants={fadeInUp}
-                    className="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text mb-4"
+                    className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-dark uppercase tracking-tight mb-4"
                 >
                     Foto-foto lucu kamu hehe :3
                 </motion.h2>
                 <motion.p
                     variants={fadeInUp}
-                    className="text-lg sm:text-xl text-gray-600 max-w-md mx-auto"
+                    className="text-lg sm:text-xl text-dark font-bold max-w-md mx-auto"
                 >
-                    Maaf aku gak bilang-bilang nyimpen foto kamu hehe, dimaafin kan? :(
+                    Maaf aku gak bilang-bilang nyimpen foto kamu hehe, dimaafin kan?
                 </motion.p>
             </motion.div>
 
@@ -73,7 +62,7 @@ const MemoryGallery = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="w-full max-w-6xl mx-auto"
+                className="w-full max-w-6xl mx-auto neo-box bg-accent p-4 sm:p-8"
             >
                 {/* Responsive column count */}
                 <div className="hidden lg:block">
@@ -96,11 +85,11 @@ const MemoryGallery = () => {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8 }}
-                className="mt-8 sm:mt-12 text-center"
+                className="mt-12 text-center flex justify-center gap-4"
             >
-                <span className="text-2xl sm:text-3xl">
-                    {'💖'.repeat(5)}
-                </span>
+                <Heart className="w-8 h-8 text-primary fill-primary animate-bounce-neo" />
+                <Heart className="w-8 h-8 text-secondary fill-secondary animate-bounce-neo" style={{ animationDelay: '0.2s' }} />
+                <Heart className="w-8 h-8 text-accent fill-accent animate-bounce-neo" style={{ animationDelay: '0.4s' }} />
             </motion.div>
         </section>
     );

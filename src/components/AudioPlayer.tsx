@@ -83,22 +83,22 @@ const AudioPlayer = () => {
         <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="fixed bottom-4 left-4 z-50 flex items-center gap-2"
+            className="fixed bottom-6 left-6 z-50 flex items-center gap-4"
         >
-            <div className="relative group">
+            <div className="relative group flex items-center gap-4">
                 <button
                     onClick={togglePlay}
                     className={`
-                        w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center 
-                        shadow-lg transition-all duration-300 backdrop-blur-sm border-2
+                        w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center 
+                        border-4 border-dark shadow-neo transition-all duration-200 active:translate-x-1 active:translate-y-1 active:shadow-none
                         ${isPlaying
-                            ? 'bg-primary-500/80 border-primary-400 text-white animate-spin-slow'
-                            : 'bg-white/80 border-gray-200 text-gray-500 hover:bg-gray-50'
+                            ? 'bg-accent text-dark'
+                            : 'bg-white text-dark hover:bg-gray-100'
                         }
                     `}
                     aria-label={isPlaying ? "Pause music" : "Play music"}
                 >
-                    <Music className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <Music className={`w-6 h-6 sm:w-8 sm:h-8 ${isPlaying ? 'animate-bounce-neo' : ''}`} />
                 </button>
 
                 {/* Mute Control - Appears on hover/active */}
@@ -109,12 +109,12 @@ const AudioPlayer = () => {
                             animate={{ width: 'auto', opacity: 1, x: 0 }}
                             exit={{ width: 0, opacity: 0, x: -10 }}
                             onClick={toggleMute}
-                            className="absolute left-full ml-2 top-1 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-primary-600 hover:scale-110 transition-transform"
+                            className="w-10 h-10 sm:w-12 sm:h-12 bg-white border-4 border-dark shadow-neo flex items-center justify-center text-dark hover:bg-gray-100 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-200"
                         >
                             {isMuted ? (
-                                <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <VolumeX className="w-5 h-5 sm:w-6 sm:h-6" />
                             ) : (
-                                <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <Volume2 className="w-5 h-5 sm:w-6 sm:h-6" />
                             )}
                         </motion.button>
                     )}

@@ -1,12 +1,7 @@
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import { fadeInUp, fadeInDown, staggerContainer, titleLetterAnimation } from '../constants/animations';
+import { ChevronDown, Sparkles } from 'lucide-react';
+import { fadeInUp, fadeInDown, staggerContainer } from '../constants/animations';
 
-/**
- * Hero Section Component
- * Landing section with animated title and scroll prompt
- * Optimized for mobile with responsive typography and spacing
- */
 interface HeroSectionProps {
     isLoading?: boolean;
 }
@@ -23,88 +18,57 @@ const HeroSection = ({ isLoading = false }: HeroSectionProps) => {
     return (
         <section
             id="hero"
-            className="scroll-section min-h-[100dvh] flex items-center justify-center relative overflow-hidden px-4"
+            className="scroll-section min-h-[100dvh] flex items-center justify-center relative overflow-hidden px-4 bg-[#fffce5]"
         >
-            {/* Background decorative elements */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-20 left-10 w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" />
-                <div className="absolute top-40 right-10 w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 bg-secondary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '1s' }} />
-                <div className="absolute -bottom-8 left-1/2 w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 bg-accent-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '2s' }} />
+            {/* Background decorative brutalist elements */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-10 w-32 h-32 bg-primary neo-box animate-bounce-neo" />
+                <div className="absolute top-40 right-10 w-40 h-40 bg-accent rounded-full border-4 border-dark shadow-neo" style={{ animationDelay: '1s' }} />
+                <div className="absolute -bottom-10 left-1/4 w-48 h-48 bg-secondary neo-box rotate-12" />
             </div>
 
             {/* Main content */}
-            <div className="container mx-auto text-center">
+            <div className="container mx-auto text-center z-10">
                 <motion.div
                     variants={staggerContainer}
                     initial="hidden"
                     animate={isLoading ? "hidden" : "visible"}
-                    className="space-y-6 sm:space-y-8"
+                    className="space-y-8 neo-box p-8 sm:p-12 max-w-4xl mx-auto bg-white"
                 >
+                    <div className="flex justify-center mb-4">
+                        <div className="bg-primary p-4 rounded-full border-4 border-dark shadow-neo">
+                            <Sparkles className="w-12 h-12 text-dark" />
+                        </div>
+                    </div>
+
                     {/* Animated title */}
                     <motion.h1
-                        className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold gradient-text leading-snug sm:leading-tight px-2 max-w-full flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 sm:gap-y-2"
+                        className="text-5xl sm:text-6xl md:text-8xl font-display font-black text-dark uppercase tracking-tighter leading-none"
                         variants={fadeInDown}
                     >
                         {title.split(' ').map((word, wordIndex) => (
-                            <span key={wordIndex} className="inline-block whitespace-nowrap">
-                                {word.split('').map((char, charIndex) => {
-                                    // Calculate global index for delay consistency
-                                    const globalIndex = title.split(' ').slice(0, wordIndex).join('').length + charIndex;
-                                    return (
-                                        <motion.span
-                                            key={charIndex}
-                                            variants={titleLetterAnimation}
-                                            transition={{
-                                                duration: 0.5,
-                                                delay: globalIndex * 0.05
-                                            }}
-                                            className="inline-block"
-                                        >
-                                            {char}
-                                        </motion.span>
-                                    );
-                                })}
-                                {/* Add space after word unless it's the last one */}
-                                {wordIndex < title.split(' ').length - 1 && (
-                                    <span className="inline-block">&nbsp;</span>
-                                )}
+                            <span key={wordIndex} className="inline-block whitespace-nowrap mr-4 mb-2">
+                                {word}
                             </span>
                         ))}
                     </motion.h1>
 
                     {/* Subtitle */}
                     <motion.p
-                        className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-700 font-medium px-4"
+                        className="text-xl sm:text-2xl md:text-3xl text-dark font-bold px-4 border-t-4 border-dark pt-6 mt-6"
                         variants={fadeInUp}
                     >
                         {subtitle}
                     </motion.p>
 
-                    {/* CTA Button - Touch-friendly */}
+                    {/* CTA Button */}
                     <motion.button
                         onClick={scrollToReasons}
-                        className="mt-6 sm:mt-8 px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 min-h-[48px] min-w-[160px]"
+                        className="mt-8 px-8 py-4 neo-btn text-xl sm:text-2xl w-full sm:w-auto flex justify-center items-center gap-2"
                         variants={fadeInUp}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                     >
-                        let's gooo ✨
+                        LET'S GOOO <ChevronDown className="w-6 h-6" />
                     </motion.button>
-                </motion.div>
-
-                {/* Scroll indicator */}
-                <motion.div
-                    className="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                        duration: 0.8,
-                        delay: 1.5,
-                        repeat: Infinity,
-                        repeatType: 'reverse'
-                    }}
-                >
-                    <ChevronDown className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500" />
                 </motion.div>
             </div>
         </section>

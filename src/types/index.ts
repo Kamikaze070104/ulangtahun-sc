@@ -4,7 +4,7 @@ export interface Reason {
     id: number;
     title: string;
     description: string;
-    emoji: string;
+    icon: any;
     color: 'primary' | 'secondary' | 'accent';
 }
 

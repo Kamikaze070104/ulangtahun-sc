@@ -2,14 +2,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { fadeInUp, scaleIn, staggerContainer } from '../constants/animations';
-import { Mic } from 'lucide-react';
-
-/**
- * Candle Blow Section Component
- * Beautiful birthday cake with number "22" candles based on reference image
- * Features: Golden glittery number candles, two-tier pink cake, flower decorations
- * UPDATE: Added microphone interaction to blow out candles
- */
+import { Mic, Flame, Sparkles } from 'lucide-react';
 
 const CandleBlowSection = () => {
     const [candlesLit, setCandlesLit] = useState(true);
@@ -28,7 +21,6 @@ const CandleBlowSection = () => {
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { amount: 0.5 });
 
-    // Initialize Microphone
     useEffect(() => {
         if (!isInView || !candlesLit || hasBlown) {
             setAudioVolume(0);
@@ -37,7 +29,6 @@ const CandleBlowSection = () => {
 
         const initMic = async () => {
             try {
-                // Check if browser supports getUserMedia
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                     setMicPermission(false);
                     return;
@@ -84,7 +75,6 @@ const CandleBlowSection = () => {
         const dataArray = new Uint8Array(bufferLength);
         analyserRef.current.getByteFrequencyData(dataArray);
 
-        // Calculate average volume
         let sum = 0;
         for (let i = 0; i < bufferLength; i++) {
             sum += dataArray[i];
@@ -94,8 +84,6 @@ const CandleBlowSection = () => {
         if (isHoldingRef.current) {
             setAudioVolume(average);
 
-            // Threshold for "blowing" (adjusted for better sensitivity)
-            // Lowered from 40 to 20 based on user feedback
             const BLOW_THRESHOLD = 20;
 
             if (average > BLOW_THRESHOLD && candlesLit && !isBlowing) {
@@ -114,7 +102,6 @@ const CandleBlowSection = () => {
         setIsBlowing(true);
         setCandlesLit(false);
 
-        // Stop listening to mic
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current);
         }
@@ -129,13 +116,11 @@ const CandleBlowSection = () => {
     const relightCandles = () => {
         setCandlesLit(true);
         setHasBlown(false);
-        // Effect will re-run to restart mic
     };
 
     const triggerCelebration = () => {
-        const colors = ['#f9a8d4', '#fcd34d', '#c084fc', '#fb7185', '#fef3c7'];
+        const colors = ['#ff90e8', '#ffc900', '#00e5ff', '#1a1a1a'];
 
-        // Side bursts
         confetti({
             particleCount: 80,
             angle: 60,
@@ -151,7 +136,6 @@ const CandleBlowSection = () => {
             colors: colors
         });
 
-        // Center burst
         setTimeout(() => {
             confetti({
                 particleCount: 100,
@@ -183,150 +167,82 @@ const CandleBlowSection = () => {
             id="candle-blow"
             className="scroll-section min-h-[100dvh] flex items-center justify-center relative overflow-hidden px-4 py-12"
         >
-            {/* Floating confetti particles */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {Array.from({ length: 20 }).map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="confetti-particle"
-                        style={{
-                            left: `${10 + Math.random() * 80}%`,
-                            top: `${20 + Math.random() * 60}%`,
-                            backgroundColor: ['#f9a8d4', '#fcd34d', '#fef3c7', '#fbcfe8'][i % 4],
-                            width: `${4 + Math.random() * 4}px`,
-                            height: `${8 + Math.random() * 8}px`,
-                            borderRadius: '2px',
-                            transform: `rotate(${Math.random() * 360}deg)`,
-                        }}
-                        animate={{
-                            y: [0, -10, 0],
-                            rotate: [0, 180, 360],
-                            opacity: [0.4, 0.8, 0.4],
-                        }}
-                        transition={{
-                            duration: 3 + Math.random() * 2,
-                            repeat: Infinity,
-                            delay: Math.random() * 2,
-                        }}
-                    />
-                ))}
-            </div>
-
             <div className="container mx-auto text-center max-w-2xl">
                 <motion.div
                     variants={staggerContainer}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
-                    className="space-y-8"
+                    className="space-y-12"
                 >
                     {/* Title */}
-                    <motion.div variants={fadeInUp}>
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text mb-2">
-                            {hasBlown ? '🎉 Selamat!' : '✨ Make a Wish! ✨'}
+                    <motion.div variants={fadeInUp} className="neo-box p-6 bg-secondary">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-dark uppercase mb-2">
+                            {hasBlown ? 'SELAMAT!' : 'MAKE A WISH!'}
                         </h2>
-                        <p className="text-lg sm:text-xl text-gray-600">
+                        <p className="text-lg sm:text-xl text-dark font-bold uppercase">
                             {hasBlown
-                                ? 'Semoga semua harapanmu terkabul!'
+                                ? 'SEMOGA HARAPANMU TERKABUL!'
                                 : micPermission === false
-                                    ? 'Tekan tombol di bawah untuk tiup lilin!'
-                                    : 'Tahan tombol 🎙️ di bawah sambil tiup lilinnya! 💨'}
+                                    ? 'TEKAN TOMBOL DI BAWAH UNTUK TIUP LILIN!'
+                                    : 'TAHAN TOMBOL MIC SAMBIL TIUP LILINNYA!'}
                         </p>
                     </motion.div>
 
-                    {/* Birthday Cake */}
+                    {/* Brutalist Birthday Cake */}
                     <motion.div
                         variants={scaleIn}
-                        className="cake-scene"
+                        className="relative flex flex-col items-center mt-12 mb-8"
                     >
-                        {/* Glow effect when lit */}
-                        <AnimatePresence>
-                            {candlesLit && (
-                                <motion.div
-                                    className="candle-ambient-glow"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                                />
-                            )}
-                        </AnimatePresence>
-
-                        {/* Number Candles "22" */}
-                        <div className="number-candles-22">
-                            {/* First "2" */}
-                            <div className="number-candle-digit">
-                                <div className="digit-body">2</div>
+                        {/* Candles */}
+                        <div className="flex gap-8 mb-[-16px] z-10 relative">
+                            {/* Number 2 */}
+                            <div className="flex flex-col items-center">
                                 <AnimatePresence>
                                     {candlesLit && (
                                         <motion.div
-                                            className="digit-flame"
                                             initial={{ scale: 1, opacity: 1 }}
                                             exit={{ scale: 0, opacity: 0, transition: { duration: 0.4 } }}
+                                            className="text-primary mb-2 animate-bounce-neo"
                                         >
-                                            <div className="flame-outer" />
-                                            <div className="flame-inner" />
-                                            <div className="flame-glow" />
+                                            <Flame className="w-12 h-12 fill-primary" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
-                                {!candlesLit && (
-                                    <motion.div
-                                        className="digit-smoke"
-                                        initial={{ opacity: 0, y: 0 }}
-                                        animate={{ opacity: [0, 0.6, 0], y: -30 }}
-                                        transition={{ duration: 1.5 }}
-                                    />
-                                )}
+                                <div className="neo-box w-12 h-20 bg-white flex items-center justify-center -mb-2 border-b-0 border-t-4 border-l-4 border-r-4 border-dark">
+                                    <span className="font-display font-black text-4xl text-dark">2</span>
+                                </div>
                             </div>
-
-                            {/* Second "2" */}
-                            <div className="number-candle-digit">
-                                <div className="digit-body">2</div>
+                            
+                            {/* Number 2 */}
+                            <div className="flex flex-col items-center">
                                 <AnimatePresence>
                                     {candlesLit && (
                                         <motion.div
-                                            className="digit-flame"
                                             initial={{ scale: 1, opacity: 1 }}
                                             exit={{ scale: 0, opacity: 0, transition: { duration: 0.4, delay: 0.1 } }}
+                                            className="text-secondary mb-2 animate-bounce-neo"
                                         >
-                                            <div className="flame-outer" />
-                                            <div className="flame-inner" />
-                                            <div className="flame-glow" />
+                                            <Flame className="w-12 h-12 fill-secondary" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
-                                {!candlesLit && (
-                                    <motion.div
-                                        className="digit-smoke"
-                                        initial={{ opacity: 0, y: 0 }}
-                                        animate={{ opacity: [0, 0.6, 0], y: -30 }}
-                                        transition={{ duration: 1.5, delay: 0.1 }}
-                                    />
-                                )}
+                                <div className="neo-box w-12 h-20 bg-white flex items-center justify-center -mb-2 border-b-0 border-t-4 border-l-4 border-r-4 border-dark">
+                                    <span className="font-display font-black text-4xl text-dark">2</span>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Two-tier Cake */}
-                        <div className="cute-cake">
-                            {/* Top Tier */}
-                            <div className="cake-tier tier-top">
-                                <div className="tier-frosting" />
-                                <div className="tier-body" />
-                            </div>
-
-                            {/* Bottom Tier */}
-                            <div className="cake-tier tier-bottom">
-                                <div className="tier-frosting" />
-                                <div className="tier-body" />
-                                {/* Flower decorations */}
-                                <div className="flower-decoration flower-left">🌸</div>
-                                <div className="flower-decoration flower-right">🌼</div>
-                                <div className="flower-decoration flower-bottom-left">🌸</div>
-                                <div className="flower-decoration flower-bottom-right">🌼</div>
-                            </div>
-
-                            {/* Plate */}
-                            <div className="cake-plate-base" />
+                        {/* Cake Top Tier */}
+                        <div className="w-48 sm:w-56 h-16 sm:h-20 bg-primary neo-box z-10 relative flex justify-center items-center">
+                            <Sparkles className="w-8 h-8 text-dark absolute -left-4 -top-4 bg-white rounded-full p-1 border-2 border-dark" />
+                        </div>
+                        
+                        {/* Cake Bottom Tier */}
+                        <div className="w-64 sm:w-72 h-20 sm:h-24 bg-accent neo-box -mt-4 z-0 relative flex justify-center items-center">
+                            <div className="absolute top-4 left-4 w-4 h-4 bg-dark rounded-full"></div>
+                            <div className="absolute bottom-4 right-8 w-4 h-4 bg-dark rounded-full"></div>
+                            <div className="absolute top-8 right-4 w-4 h-4 bg-dark rounded-full"></div>
                         </div>
                     </motion.div>
 
@@ -338,10 +254,10 @@ const CandleBlowSection = () => {
                         {!hasBlown ? (
                             <>
                                 {micPermission === true && (
-                                    <div className="flex items-center gap-2 text-primary-600 bg-white/50 px-4 py-2 rounded-full backdrop-blur-sm">
-                                        <Mic className={`w-5 h-5 ${isHolding && audioVolume > 10 ? 'animate-pulse text-red-500' : ''}`} />
-                                        <span className="text-sm font-medium">
-                                            {isHolding ? 'Mendengarkan...' : 'Microphone Siap'}
+                                    <div className="flex items-center gap-2 text-dark bg-white px-6 py-2 border-4 border-dark shadow-neo uppercase font-bold tracking-widest mb-4">
+                                        <Mic className={`w-5 h-5 ${isHolding && audioVolume > 10 ? 'animate-bounce-neo text-primary' : ''}`} />
+                                        <span>
+                                            {isHolding ? 'MENDENGARKAN...' : 'MICROPHONE SIAP'}
                                         </span>
                                     </div>
                                 )}
@@ -354,19 +270,16 @@ const CandleBlowSection = () => {
                                     onContextMenu={(e) => e.preventDefault()}
                                     onClick={!micPermission ? blowCandles : undefined}
                                     disabled={isBlowing || !candlesLit}
-                                    className="blow-button"
+                                    className="neo-btn px-8 py-4 w-full sm:w-auto text-xl"
                                     style={{ touchAction: 'none', userSelect: 'none', WebkitUserSelect: 'none' }}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
                                 >
-                                    <span className="blow-button-bg" />
-                                    <span className="blow-button-text">
+                                    <span className="flex items-center gap-3 justify-center">
                                         {isBlowing ? (
-                                            <><span className="animate-pulse">💨</span> Meniup...</>
+                                            <>MENIUP...</>
                                         ) : isHolding ? (
-                                            <><span className="animate-pulse">🌬️</span> Tiup Sekarang!</>
+                                            <>TIUP SEKARANG!</>
                                         ) : (
-                                            <><span>🎙️</span> {micPermission ? 'Tahan & Tiup' : 'Tiup Lilin!'}</>
+                                            <><Mic className="w-6 h-6" /> {micPermission ? 'TAHAN & TIUP' : 'TIUP LILIN!'}</>
                                         )}
                                     </span>
                                 </motion.button>
@@ -374,12 +287,12 @@ const CandleBlowSection = () => {
                         ) : (
                             <motion.button
                                 onClick={relightCandles}
-                                className="relight-button"
+                                className="neo-btn bg-white px-8 py-4 text-xl flex items-center justify-center gap-2"
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ type: 'spring', stiffness: 200 }}
                             >
-                                🕯️ Nyalakan Lagi
+                                <Flame className="w-6 h-6" /> NYALAKAN LAGI
                             </motion.button>
                         )}
                     </motion.div>
@@ -391,17 +304,15 @@ const CandleBlowSection = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
-                                className="space-y-3"
+                                className="neo-box p-4 bg-primary"
                             >
                                 <motion.p
-                                    className="text-xl sm:text-2xl text-gray-700 font-medium"
-                                    animate={{ scale: [1, 1.03, 1] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
+                                    className="text-xl sm:text-2xl text-dark font-black uppercase"
                                 >
-                                    ✨ Harapanmu sudah terkirim ke alam semesta! ✨
+                                    HARAPANMU SUDAH TERKIRIM KE ALAM SEMESTA!
                                 </motion.p>
-                                <p className="text-gray-500 text-sm">
-                                    Scroll ke bawah untuk pesan spesial 💝
+                                <p className="text-dark font-bold mt-2 uppercase">
+                                    SCROLL KE BAWAH UNTUK PESAN SPESIAL
                                 </p>
                             </motion.div>
                         )}

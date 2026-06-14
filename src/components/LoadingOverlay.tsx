@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { PartyPopper, Lightbulb } from 'lucide-react';
 
 interface LoadingOverlayProps {
     onLoadingComplete?: () => void;
@@ -7,30 +8,26 @@ interface LoadingOverlayProps {
 const LoadingOverlay = ({ onLoadingComplete }: LoadingOverlayProps) => {
     const [progress, setProgress] = useState(0);
     const [isVisible, setIsVisible] = useState(true);
-    const [loadingText, setLoadingText] = useState('Memuat cinta...');
+    const [loadingText, setLoadingText] = useState('LOADING SURPRISE...');
 
-    // Fun loading messages
     const loadingMessages = [
-        'Memuat cinta... 💕',
-        'Menyiapkan kejutan... 🎁',
-        'Mengumpulkan kebahagiaan... ✨',
-        'Menabur confetti... 🎊',
-        'Merangkai alasan... 💝',
-        'Siap-siap terharu... 🥹',
-        'Hampir selesai... 🎂',
-        'Selamat datang! 🎉',
+        'LOADING SURPRISE...',
+        'PREPARING GIFTS...',
+        'GATHERING MEMORIES...',
+        'ADDING PARTY POPPERS...',
+        'WRITING REASONS...',
+        'ALMOST THERE...',
+        'READY TO GO!',
     ];
 
     useEffect(() => {
-        // Simulate loading progress
         const interval = setInterval(() => {
             setProgress((prev) => {
                 if (prev >= 100) {
                     clearInterval(interval);
                     return 100;
                 }
-                // Random increment for more realistic feel
-                const increment = Math.random() * 15 + 5;
+                const increment = Math.random() * 20 + 10;
                 return Math.min(prev + increment, 100);
             });
         }, 200);
@@ -38,16 +35,14 @@ const LoadingOverlay = ({ onLoadingComplete }: LoadingOverlayProps) => {
         return () => clearInterval(interval);
     }, []);
 
-    // Update loading text based on progress
     useEffect(() => {
         const messageIndex = Math.min(
-            Math.floor(progress / 12.5),
+            Math.floor(progress / 15),
             loadingMessages.length - 1
         );
         setLoadingText(loadingMessages[messageIndex]);
     }, [progress]);
 
-    // Handle completion
     useEffect(() => {
         if (progress >= 100) {
             const timeout = setTimeout(() => {
@@ -62,83 +57,61 @@ const LoadingOverlay = ({ onLoadingComplete }: LoadingOverlayProps) => {
 
     return (
         <div
-            className={`loading-overlay ${progress >= 100 ? 'fade-out' : ''}`}
+            className={`fixed inset-0 bg-primary z-[9999] flex flex-col items-center justify-center transition-transform duration-500 ${
+                progress >= 100 ? '-translate-y-full' : ''
+            }`}
         >
-            {/* Floating hearts background */}
-            <div className="floating-elements">
-                {[...Array(15)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="floating-heart"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 3}s`,
-                            fontSize: `${Math.random() * 20 + 15}px`,
-                        }}
-                    >
-                        {['💕', '💖', '💗', '💓', '🌸', '✨', '🎀'][i % 7]}
-                    </div>
-                ))}
-            </div>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: 'radial-gradient(#000 2px, transparent 2px)',
+                backgroundSize: '30px 30px'
+            }}></div>
 
-            {/* Main loading content */}
-            <div className="loading-content">
-                {/* Cute mascot/icon */}
-                <div className="loading-mascot">
-                    <span className="mascot-emoji">🎂</span>
-                    <div className="mascot-glow"></div>
+            <div className="neo-box p-8 max-w-lg w-full mx-4 flex flex-col items-center gap-8 relative bg-white">
+                
+                {/* Icon */}
+                <div className="bg-secondary p-4 rounded-none border-4 border-dark shadow-neo animate-bounce-neo">
+                    <PartyPopper className="w-16 h-16 text-dark" />
                 </div>
 
                 {/* Title */}
-                <h1 className="loading-title">
+                <h1 className="text-3xl sm:text-4xl font-display font-black text-dark text-center uppercase">
                     Loading Birthday Surprise
-                    <span className="title-sparkle">✨</span>
                 </h1>
 
-                {/* Progress bar container */}
-                <div className="progress-container">
-                    <div className="progress-bar-bg">
+                {/* Progress container */}
+                <div className="w-full flex flex-col gap-4">
+                    <div className="w-full h-12 bg-white border-4 border-dark relative overflow-hidden">
                         <div
-                            className="progress-bar-fill"
+                            className="absolute top-0 left-0 h-full bg-accent border-r-4 border-dark transition-all duration-300 ease-out"
                             style={{ width: `${progress}%` }}
-                        >
-                            <div className="progress-shine"></div>
-                        </div>
-                        {/* Progress bar segments for game-like feel */}
-                        <div className="progress-segments">
-                            {[...Array(10)].map((_, i) => (
-                                <div key={i} className="segment-line" />
+                        ></div>
+                        {/* Segments */}
+                        <div className="absolute inset-0 flex justify-evenly pointer-events-none">
+                            {[...Array(5)].map((_, i) => (
+                                <div key={i} className="w-1 h-full bg-dark"></div>
                             ))}
                         </div>
                     </div>
 
-                    {/* Percentage display */}
-                    <div className="progress-info">
-                        <span className="progress-text">{loadingText}</span>
-                        <span className="progress-percentage">
-                            {Math.round(progress)}%
-                        </span>
+                    {/* Progress info */}
+                    <div className="flex justify-between items-center font-bold font-display text-dark uppercase text-sm sm:text-base">
+                        <span>{loadingText}</span>
+                        <span className="text-xl sm:text-2xl">{Math.round(progress)}%</span>
                     </div>
                 </div>
 
-                {/* Loading tips - game style */}
-                <div className="loading-tip">
-                    <span className="tip-icon">💡</span>
-                    <span className="tip-text">
+                {/* Loading tip */}
+                <div className="flex items-center gap-3 p-4 bg-secondary border-4 border-dark w-full">
+                    <Lightbulb className="w-6 h-6 text-dark flex-shrink-0" />
+                    <span className="text-dark font-bold uppercase text-sm">
                         {progress < 50
-                            ? 'Tip: Scroll ke bawah untuk melihat semua alasan special!'
+                            ? 'TIP: SCROLL DOWN TO SEE ALL THE REASONS!'
                             : progress < 90
-                                ? 'Tip: Klik ❤️ untuk interaksi yang lebih seru!'
-                                : 'Siap untuk terharu? 🥹'
+                                ? 'TIP: TAP ELEMENTS FOR FUN INTERACTIONS!'
+                                : 'GET READY!'
                         }
                     </span>
-                </div>
-            </div>
-
-            {/* Bottom decorative elements */}
-            <div className="loading-footer">
-                <div className="footer-hearts">
-                    {'💕'.repeat(5)}
                 </div>
             </div>
         </div>
